@@ -8,10 +8,10 @@ public class Node {
 
 	public List<Node> children = new ArrayList<Node>();
 	char[] goal = {
-			'^','^','$','^',
+			'^','^','^','^',
 			'^','a','^','^',
 			'^','b','^','^',
-			'^','c','^','^'
+			'$','c','^','^'
 	};
 	public Node parent;
 	public int gridSize = 16;
@@ -23,7 +23,7 @@ public class Node {
 		copyNode(begin, grid);
 //		printGrid();
 //		try {
-//			Thread.sleep(500);
+//			Thread.sleep(100);
 //		} catch (InterruptedException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
@@ -43,7 +43,6 @@ public class Node {
 				agentPos = i;
 			}
 		}
-			System.out.println("agentPos" + agentPos);
 			moveRight(grid, agentPos);
 			moveLeft(grid, agentPos);
 			moveUp(grid, agentPos);
@@ -64,7 +63,7 @@ public class Node {
 			Node child = new Node(ch);
 			children.add(child);
 			child.parent = this;
-			System.out.println("Right");
+//			System.out.println("Right");
 		}
 
 	}
@@ -81,7 +80,7 @@ public class Node {
 			Node child = new Node(ch);
 			children.add(child);
 			child.parent = this;
-			System.out.println("left");
+//			System.out.println("left");
 		}
 	}
 
@@ -97,7 +96,7 @@ public class Node {
 			Node child = new Node(ch);
 			children.add(child);
 			child.parent = this;
-			System.out.println("up");
+//			System.out.println("up");
 		}
 	}
 
@@ -113,7 +112,7 @@ public class Node {
 			Node child = new Node(ch);
 			children.add(child);
 			child.parent = this;
-			System.out.println("Down");
+//			System.out.println("Down");
 		}
 	}
 
@@ -148,7 +147,7 @@ public class Node {
 
 	public boolean isGoal() {
 		boolean finish = false;
-		if (Arrays.equals(goal, this.grid)) {
+		if (this.grid[5] == 'a' && this.grid[9] == 'b' && this.grid[13] == 'c') {
 			finish = true;
 		}
 		return finish;
