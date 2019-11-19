@@ -6,16 +6,16 @@ import java.util.List;
 public class Main {
 	
 	public static void main(String[] args) {
-		char[] startState = {
-				'^','^','^','^',
-				'^','^','^','^',
-				'^','^','^','^',
-				'a','b','c','$'
+		char[][] startState = {
+				{'^','^','^','^'},
+				{'^','^','^','^'},
+				{'^','^','^','^'},
+				{'a','b','c','$'}
 		};
 		Node root = new Node(startState);
 		
 		Search search = new Search();
-		List<Node> sol = search.DLS(root, 13);
+		List<Node> sol = search.AS(root);
 //		List<Node> dls = search.dls;
 //		Search search1 = new Search();
 //		List<Node> sol1 = search1.BFS(root);

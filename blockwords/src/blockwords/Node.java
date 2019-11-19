@@ -7,58 +7,51 @@ import java.util.List;
 public class Node {
 
 	public List<Node> children = new ArrayList<Node>();
-	char[] goal = {
-			'^','^','^','^',
-			'^','a','^','^',
-			'^','b','^','^',
-			'$','c','^','^'
-	};
+//	char[] goal = { '^', '^', '^', '^', '^', 'a', '^', '^', '^', 'b', '^', '^', '$', 'c', '^', '^' };
 	public Node parent;
 	public int gridSize = 16;
-	char[] grid = new char[gridSize];
 	public int col = 4;
-	public int agentPos;
+	char[][] grid = new char[col][col];
+	public int agentRow;
+	public int agentCol;
+	public int priority;
 
-	public Node(char[] begin) {
+	public Node(char[][] begin) {
 		copyNode(begin, grid);
 //		printGrid();
 //		try {
-//			Thread.sleep(100);
+//			Thread.sleep(500);
 //		} catch (InterruptedException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 	}
 
-	public void fillGrid() {
-		for (int i = 0; i < grid.length; i++) {
-			grid[i] = '#';
-
-		}
-	}
-	
 	public void ExpandNode() {
-		for(int i = 0; i < grid.length; i++) {
-			if (grid[i] == '$') {
-				agentPos = i;
+		for (int i = 0; i < col; i++) {
+			for (int j = 0; j < col; j++) {
+				if (grid[i][j] == '$') {
+					agentRow = i;
+					agentCol = j;
+				}
 			}
 		}
-			moveRight(grid, agentPos);
-			moveLeft(grid, agentPos);
-			moveUp(grid, agentPos);
-			moveDown(grid, agentPos);
+		moveRight(grid, agentRow, agentCol);
+		moveLeft(grid, agentRow, agentCol);
+		moveUp(grid, agentRow, agentCol);
+		moveDown(grid, agentRow, agentCol);
 	}
 
-	public void moveRight(char[] some, int pos) {
+	public void moveRight(char[][] some, int agentRow, int agentCol) {
 
-		if (pos % col < col - 1) {
+		if (agentCol < col - 1) {
 
-			char[] ch = new char[gridSize];
+			char[][] ch = new char[col][col];
 			copyNode(some, ch);
 
-			char temp = ch[pos + 1];
-			ch[pos + 1] = ch[pos];
-			ch[pos] = temp;
+			char temp = ch[agentRow][agentCol + 1];
+			ch[agentRow][agentCol + 1] = ch[agentRow][agentCol];
+			ch[agentRow][agentCol] = temp;
 
 			Node child = new Node(ch);
 			children.add(child);
@@ -68,14 +61,14 @@ public class Node {
 
 	}
 
-	public void moveLeft(char[] some, int pos) {
-		if (pos % col > 0) {
-			char[] ch = new char[gridSize];
+	public void moveLeft(char[][] some, int agentRow, int agentCol) {
+		if (agentCol > 0) {
+			char[][] ch = new char[col][col];
 			copyNode(some, ch);
 
-			char temp = ch[pos - 1];
-			ch[pos - 1] = ch[pos];
-			ch[pos] = temp;
+			char temp = ch[agentRow][agentCol - 1];
+			ch[agentRow][agentCol - 1] = ch[agentRow][agentCol];
+			ch[agentRow][agentCol] = temp;
 
 			Node child = new Node(ch);
 			children.add(child);
@@ -84,14 +77,14 @@ public class Node {
 		}
 	}
 
-	public void moveUp(char[] some, int pos) {
-		if (pos >= col) {
-			char[] ch = new char[gridSize];
+	public void moveUp(char[][] some, int agentRow, int agentCol) {
+		if (agentRow > 0) {
+			char[][] ch = new char[col][col];
 			copyNode(some, ch);
 
-			char temp = ch[pos - col];
-			ch[pos - col] = ch[pos];
-			ch[pos] = temp;
+			char temp = ch[agentRow - 1][agentCol];
+			ch[agentRow - 1][agentCol] = ch[agentRow][agentCol];
+			ch[agentRow][agentCol] = temp;
 
 			Node child = new Node(ch);
 			children.add(child);
@@ -100,14 +93,14 @@ public class Node {
 		}
 	}
 
-	public void moveDown(char[] some, int pos) {
-		if (pos + col < grid.length) {
-			char[] ch = new char[gridSize];
+	public void moveDown(char[][] some, int agentRow, int agentCol) {
+		if (agentRow < col - 1) {
+			char[][] ch = new char[col][col];
 			copyNode(some, ch);
 
-			char temp = ch[pos + col];
-			ch[pos + col] = ch[pos];
-			ch[pos] = temp;
+			char temp = ch[agentRow + 1][agentCol];
+			ch[agentRow + 1][agentCol] = ch[agentRow][agentCol];
+			ch[agentRow][agentCol] = temp;
 
 			Node child = new Node(ch);
 			children.add(child);
@@ -115,13 +108,39 @@ public class Node {
 //			System.out.println("Down");
 		}
 	}
-
-	public void printGrid() {
-		int b = 0;
+	
+	int rowDiff = 0;
+	int colDiff = 0;
+	int val = 0;
+	public int getPriority() {
 		for (int i = 0; i < col; i++) {
 			for (int j = 0; j < col; j++) {
-				System.out.print(grid[b] + " ");
-				b++;
+				if(this.grid[i][j] == 'a') {
+					rowDiff = Math.abs(i - 1);
+					colDiff = Math.abs(j - 1);
+					val = val + rowDiff + colDiff;
+				}
+				if(this.grid[i][j] == 'b') {
+					rowDiff = Math.abs(i - 2);
+					colDiff = Math.abs(j - 1);
+					val = val + rowDiff + colDiff;
+				}
+				if(this.grid[i][j] == 'c') {
+					rowDiff = Math.abs(i - 3);
+					colDiff = Math.abs(j - 1);
+					val = val + rowDiff + colDiff;
+				}
+				
+			}
+
+		}
+		return val;
+	}
+
+	public void printGrid() {
+		for (int i = 0; i < col; i++) {
+			for (int j = 0; j < col; j++) {
+				System.out.print(grid[i][j] + " ");
 			}
 			System.out.println();
 
@@ -129,25 +148,29 @@ public class Node {
 		System.out.println();
 	}
 
-	public boolean puzzleEquality(char[] x) {
+	public boolean puzzleEquality(char[][] x) {
 		boolean equal = true;
-		for (int i = 0; i < x.length; i++) {
-			if (grid[i] != x[i]) {
-				equal = false;
+		for (int i = 0; i < col; i++) {
+			for (int j = 0; j < col; j++) {
+				if (grid[i][j] != x[i][j]) {
+					equal = false;
+				}
 			}
 		}
 		return equal;
 	}
 
-	public void copyNode(char[] x, char[] y) {
+	public void copyNode(char[][] x, char[][] y) {
 		for (int i = 0; i < x.length; i++) {
-			y[i] = x[i];
+			for (int j = 0; j < x.length; j++) {
+				y[i][j] = x[i][j];
+			}
 		}
 	}
 
 	public boolean isGoal() {
 		boolean finish = false;
-		if (this.grid[5] == 'a' && this.grid[9] == 'b' && this.grid[13] == 'c') {
+		if (this.grid[1][1] == 'a' && this.grid[2][1] == 'b' && this.grid[3][1] == 'c') {
 			finish = true;
 		}
 		return finish;
