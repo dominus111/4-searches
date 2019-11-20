@@ -1,5 +1,7 @@
 package blockwords;
 
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,8 +16,9 @@ public class Main {
 		};
 		Node root = new Node(startState);
 		
+		
 		Search search = new Search();
-		List<Node> sol = search.AS(root);
+		List<Node> sol = search.IDS(root);
 //		List<Node> dls = search.dls;
 //		Search search1 = new Search();
 //		List<Node> sol1 = search1.BFS(root);
@@ -26,8 +29,15 @@ public class Main {
 //		 for(Node e : bfs) {
 //	        e.printGrid();
 //		 }
-		
-		
+//		PrintStream fileOut = null;
+//		try {
+//			 fileOut = new PrintStream("./out.txt");
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		System.setOut(fileOut);
 		if(sol.size() > 0) {
 			Collections.reverse(sol);
 			for(int i = 0; i < sol.size(); i++) {
@@ -37,5 +47,6 @@ public class Main {
 		} else {
 			System.out.println("No solution found"); 
 		}
+//		System.out.println(sol.size());
 	}
 }

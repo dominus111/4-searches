@@ -7,14 +7,13 @@ import java.util.List;
 public class Node {
 
 	public List<Node> children = new ArrayList<Node>();
-//	char[] goal = { '^', '^', '^', '^', '^', 'a', '^', '^', '^', 'b', '^', '^', '$', 'c', '^', '^' };
 	public Node parent;
-	public int gridSize = 16;
 	public int col = 4;
 	char[][] grid = new char[col][col];
-	public int agentRow;
-	public int agentCol;
 	public int priority;
+	public int depth;
+	public char blocked = 'x';
+	public int manhatan;
 
 	public Node(char[][] begin) {
 		copyNode(begin, grid);
@@ -28,6 +27,8 @@ public class Node {
 	}
 
 	public void ExpandNode() {
+		int agentRow = 0;
+		int agentCol = 0;
 		for (int i = 0; i < col; i++) {
 			for (int j = 0; j < col; j++) {
 				if (grid[i][j] == '$') {
@@ -44,7 +45,8 @@ public class Node {
 
 	public void moveRight(char[][] some, int agentRow, int agentCol) {
 
-		if (agentCol < col - 1) {
+
+		if (agentCol < col - 1 && some[agentRow][agentCol+1] != blocked) {
 
 			char[][] ch = new char[col][col];
 			copyNode(some, ch);
@@ -54,6 +56,8 @@ public class Node {
 			ch[agentRow][agentCol] = temp;
 
 			Node child = new Node(ch);
+//			child.agentRow = agentRow;
+//			child.agentCol = agentCol + 1;
 			children.add(child);
 			child.parent = this;
 //			System.out.println("Right");
@@ -62,7 +66,7 @@ public class Node {
 	}
 
 	public void moveLeft(char[][] some, int agentRow, int agentCol) {
-		if (agentCol > 0) {
+		if (agentCol > 0 && some[agentRow][agentCol-1] != blocked) {
 			char[][] ch = new char[col][col];
 			copyNode(some, ch);
 
@@ -71,6 +75,8 @@ public class Node {
 			ch[agentRow][agentCol] = temp;
 
 			Node child = new Node(ch);
+//			child.agentRow = agentRow;
+//			child.agentCol = agentCol - 1;
 			children.add(child);
 			child.parent = this;
 //			System.out.println("left");
@@ -78,7 +84,7 @@ public class Node {
 	}
 
 	public void moveUp(char[][] some, int agentRow, int agentCol) {
-		if (agentRow > 0) {
+		if (agentRow > 0 &&  some[agentRow-1][agentCol] != blocked) {
 			char[][] ch = new char[col][col];
 			copyNode(some, ch);
 
@@ -87,6 +93,8 @@ public class Node {
 			ch[agentRow][agentCol] = temp;
 
 			Node child = new Node(ch);
+//			child.agentRow = agentRow - 1;
+//			child.agentCol = agentCol;
 			children.add(child);
 			child.parent = this;
 //			System.out.println("up");
@@ -94,7 +102,7 @@ public class Node {
 	}
 
 	public void moveDown(char[][] some, int agentRow, int agentCol) {
-		if (agentRow < col - 1) {
+		if (agentRow < col - 1 &&  some[agentRow+1][agentCol] != blocked) {
 			char[][] ch = new char[col][col];
 			copyNode(some, ch);
 
@@ -103,38 +111,47 @@ public class Node {
 			ch[agentRow][agentCol] = temp;
 
 			Node child = new Node(ch);
+//			child.agentRow = agentRow + 1;
+//			child.agentCol = agentCol;
 			children.add(child);
 			child.parent = this;
 //			System.out.println("Down");
 		}
 	}
 	
-	int rowDiff = 0;
-	int colDiff = 0;
-	int val = 0;
-	public int getPriority() {
+	
+	public void calcPriority() {
+		int rowDiff = 0;
+		int colDiff = 0;
+		int val = 0;
 		for (int i = 0; i < col; i++) {
 			for (int j = 0; j < col; j++) {
 				if(this.grid[i][j] == 'a') {
 					rowDiff = Math.abs(i - 1);
 					colDiff = Math.abs(j - 1);
 					val = val + rowDiff + colDiff;
+//					System.out.println("a " + val);
 				}
 				if(this.grid[i][j] == 'b') {
 					rowDiff = Math.abs(i - 2);
 					colDiff = Math.abs(j - 1);
 					val = val + rowDiff + colDiff;
+//					System.out.println("b " + val);
 				}
 				if(this.grid[i][j] == 'c') {
 					rowDiff = Math.abs(i - 3);
 					colDiff = Math.abs(j - 1);
 					val = val + rowDiff + colDiff;
+//					System.out.println("c " + val);
 				}
 				
 			}
 
 		}
-		return val;
+		manhatan = val + depth;
+	}
+	public int getPriority() {
+		return manhatan;
 	}
 
 	public void printGrid() {
@@ -174,5 +191,10 @@ public class Node {
 			finish = true;
 		}
 		return finish;
+	}
+
+	public void setDepth(int depth) {
+		this.depth = depth;
+		
 	}
 }
