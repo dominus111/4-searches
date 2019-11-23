@@ -17,33 +17,25 @@ public class Main {
 		Node root = new Node(startState);
 		
 		
+		
 		Search search = new Search();
-		List<Node> sol = search.IDS(root);
-//		List<Node> dls = search.dls;
-//		Search search1 = new Search();
-//		List<Node> sol1 = search1.BFS(root);
-//		List<Node> bfs = search1.bfs;
-//		 bfs.removeAll(dls);
-//		 System.out.println("DIferencessssssssssssssssssssssssssss");
-//
-//		 for(Node e : bfs) {
-//	        e.printGrid();
-//		 }
-//		PrintStream fileOut = null;
-//		try {
-//			 fileOut = new PrintStream("./out.txt");
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		System.setOut(fileOut);
+		List<Node> sol = search.AS(root);
+		
+		
 		if(sol.size() > 0) {
-			Collections.reverse(sol);
-			for(int i = 0; i < sol.size(); i++) {
-				System.out.println(i);
-				sol.get(i).printGrid();
-			}
+//			Collections.reverse(sol);
+//			for(int i = 0; i < sol.size(); i++) {
+//				System.out.println(i);
+//				sol.get(i).printGrid();
+//			}
+			
+//			try {
+//				Thread.sleep(500);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			System.out.println("Found"); 
 		} else {
 			System.out.println("No solution found"); 
 		}
