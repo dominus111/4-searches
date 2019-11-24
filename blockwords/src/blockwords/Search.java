@@ -111,7 +111,7 @@ public class Search {
 				runtime.gc();
 				// Calculate the used memory
 				long memory = runtime.totalMemory() - runtime.freeMemory();
-//				System.out.println((memory/mb));
+				System.out.println("Memory " + (memory / kb));
 				findPath(solution, current);
 				solFound = true;
 				break here;
@@ -132,6 +132,7 @@ public class Search {
 				}
 				s.push(child);
 			}
+			current.children = null;
 			current = null;
 
 		}
@@ -151,7 +152,7 @@ public class Search {
 		}
 
 		while (ids.isEmpty()) {
-			ids = DLLS(root, maxDepth);
+			ids = DLLS(root, 14);
 			maxDepth++;
 
 		}
@@ -180,11 +181,10 @@ public class Search {
 			// depth = map.get(current);
 			boolean d = false;
 			count = 0;
-//			runtime.gc();
-//			if(memory > runtime.totalMemory() - runtime.freeMemory()) {
-//				memory = runtime.totalMemory() - runtime.freeMemory();
-//				System.out.println(memory);
-//		}
+			runtime.gc();
+
+			memory = runtime.totalMemory() - runtime.freeMemory();
+			System.out.println(memory/kb);
 
 			if (depth < maxDepth) {
 
@@ -247,9 +247,7 @@ public class Search {
 
 				current = null;
 
-			} else if (depth > maxDepth) {
-				System.out.println("Problem");
-				System.exit(0);
+			
 			} else {
 
 //				System.out.println("depth1 " + depth);
@@ -293,13 +291,13 @@ public class Search {
 			}
 
 		}
-		
+
 		root = null;
 		map = null;
 		s = null;
 		System.gc();
 //		System.out.println("Depth " + maxDepth + ", Nodes: " + totalCount);
-//		System.out.println(totalCount);
+		System.out.println(totalCount);
 //		runtime.gc();
 //		memory = runtime.totalMemory() - runtime.freeMemory();
 //		System.out.println((memory/kb));
@@ -375,18 +373,12 @@ public class Search {
 //	}
 
 	public List<Node> AS(Node root) {
-//		List<Node> solution = new ArrayList<>();
-//		toExpand = new ArrayList<>();
-//		List<Node> traversed = new ArrayList<>();
-		List<Node> children = new ArrayList<>();
 		Comparator<Node> comparator = new MyComparator();
 		PriorityQueue<Node> pq = new PriorityQueue<>(comparator);
 		HashMap<Node, Integer> map = new HashMap<>();
-		HashMap<Integer, Long> nodes = new HashMap<>();
+		HashMap<Node, Integer> nodeCount = new HashMap<>();
 		int depth = 0;
 		int count = 1;
-		int dcount = 1;
-		int dhelper = 0;
 		boolean dbool = true;
 
 		pq.add(root);
@@ -398,11 +390,10 @@ public class Search {
 			Node current = pq.poll();
 			depth = map.get(current);
 
-			// System.out.println("toexpand size " + toExpand.size());
+
 			traversed.add(current);
-			int count2 = 0;
 			dbool = true;
-			// System.out.println(count);
+
 
 			if (current.isGoal()) {
 				System.out.println("Goal is found");
@@ -416,64 +407,101 @@ public class Search {
 
 			for (int i = 0; i < current.children.size(); i++) {
 				count++;
+				if (dbool) {
+					depth++;
+					dbool = false;
+				}
 
-//				System.out.println("Here");
-//				System.out.println(current.children.size());
 				Node child = current.children.get(i);
-//				System.out.println("Children");
+	
+				nodeCount.put(child, depth);
+//				System.out.println(depth);
 //				child.printGrid();
+//				try {
+//					Thread.sleep(500);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 
 				if (!containsQueue(pq, child) && !contains(traversed, child)) {
 
-					count2++;
-					if (dbool) {
-						depth++;
-						dbool = false;
-					}
 
 					child.setDepth(depth);
 					child.calcPriority();
 					map.put(child, depth);
 					pq.add(child);
-
-					System.out.println("Priority " + child.getPriority());
+//					System.out.println(depth);
 //					child.printGrid();
 //					try {
-//						Thread.sleep(500);
+//						Thread.sleep(10);
 //					} catch (InterruptedException e) {
 //						// TODO Auto-generated catch block
 //						e.printStackTrace();
 //					}
-//					System.out.println("Entered");
+
 				}
-				// System.out.println("added");
 
 			}
-//			dhelper = dhelper + count2;
-//			count2 = 0;
-//			dcount--;
-//			if (dcount == 0) {
-//				depth++;
-//				dcount = dhelper;
-//				dhelper = 0;
-
-//			}
+			
+//			System.out.println("Depth " + depth + ", " + "Nodes: " + count);
 			current.children = null;
 			current = null;
 
-			// Get the Java runtime
-//			Runtime runtime = Runtime.getRuntime();
-//			// Run the garbage collector
-//			runtime.gc();
-//			// Calculate the used memory
-//			long memory = runtime.totalMemory() - runtime.freeMemory();
-////			System.out.println();
-//			nodes.put(depth, memory/kb);
 
 		}
-//		for (Entry<Integer, Long> entry : nodes.entrySet()) {
-////			System.out.println( + entry.getValue());
-//		}
+		int[] z = new int[14];
+		for (Entry<Node, Integer> entry : nodeCount.entrySet()) {
+//			System.out.println(entry.getValue());
+//			entry.getKey().printGrid();
+			switch(entry.getValue()) {
+			case 1:
+				z[0] = z[0]+1;
+				break;
+			case 2:
+				z[1] = z[1]+1;
+				break;
+			case 3:
+				z[2] = z[2]+1;
+				break;
+			case 4:
+				z[3] = z[3]+1;
+				break;
+			case 5:
+				z[4] = z[4]+1;
+				break;
+			case 6:
+				z[5] = z[5]+1;
+				break;
+			case 7:
+				z[6] = z[6]+1;
+				break;
+			case 8:
+				z[7] = z[7]+1;
+				break;
+			case 9:
+				z[8] = z[8]+1;
+				break;
+			case 10:
+				z[9] = z[9]+1;
+				break;
+			case 11:
+				z[10] = z[10]+1;
+				break;
+			case 12:
+				z[11] = z[11]+1;
+				break;
+			case 13:
+				z[12] = z[12]+1;
+				break;
+			case 14:
+				z[13] = z[13]+1;	
+				break;
+			}
+		}
+		for(int x :z) {
+			System.out.println(x);
+		}
 		System.out.println(count);
 		return solution;
 	}

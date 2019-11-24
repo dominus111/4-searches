@@ -13,7 +13,7 @@ public class Node {
 	public int priority;
 	public int depth;
 	public char blocked = 'x';
-	public int manhatan;
+	public int manhattan;
 
 	public Node(char[][] begin) {
 		copyNode(begin, grid);
@@ -148,10 +148,10 @@ public class Node {
 			}
 
 		}
-		manhatan = val + depth;
+		manhattan = val + depth;
 	}
 	public int getPriority() {
-		return manhatan;
+		return manhattan;
 	}
 
 	public void printGrid() {
