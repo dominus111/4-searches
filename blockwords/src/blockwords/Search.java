@@ -14,17 +14,15 @@ import java.util.Queue;
 import java.util.Stack;
 
 public class Search {
-	List<Node> toExpand = new ArrayList<>();
 	List<Node> solution = new ArrayList<>();
 	List<Node> traversed = new ArrayList<>();
 	Stack<Node> s;
 	Runtime runtime = Runtime.getRuntime();
-	long mb = 1024L * 1024L;
 	long kb = 1024L;
 	boolean solFound = false;
 	boolean expand = false;
-	int o1Pri;
-	int o2Pri;
+	int priority1;
+	int priority2;
 
 	public List<Node> BFS(Node root) {
 		Queue<Node> queue = new LinkedList<>();
@@ -35,8 +33,7 @@ public class Search {
 		boolean solFound = false;
 		queue.add(root);
 		if (root.isGoal()) {
-			System.out.println("Goal is found at depth " + (depth));
-			System.out.println("Nodes expanded " + count);
+			System.out.println("Goal depth " + depth + ", Nodes expanded " + count);
 			findPath(solution, root);
 			solFound = true;
 		}
@@ -55,10 +52,6 @@ public class Search {
 				if (child.isGoal()) {
 					System.out.println("Goal is found at depth " + (depth + 1));
 					System.out.println("Nodes expanded " + count);
-//					runtime.gc();
-//					// Calculate the used memory
-//					long memory = runtime.totalMemory() - runtime.freeMemory();
-//					System.out.println((memory/mb));
 					findPath(solution, child);
 					solFound = true;
 					break here;
@@ -78,18 +71,8 @@ public class Search {
 				depth++;
 				dcount = dhelper;
 				dhelper = 0;
-//				System.out.println("Depth " + depth + ", " + "Nodes: " + count);
-				// Run the garbage collector
-//				System.out.println(count);
-//				runtime.gc();
-//				// Calculate the used memory
-//				long memory = runtime.totalMemory() - runtime.freeMemory();
-//				System.out.println((memory/mb));
+				System.out.println("Depth " + depth + ", " + "Nodes: " + count);
 			}
-
-			// since I have a reference Node parent I can delete this
-//			current = null;
-
 		}
 		return solution;
 	}
@@ -107,11 +90,7 @@ public class Search {
 			dbool = true;
 
 			if (current.isGoal()) {
-				System.out.println(depth + 1);
-				runtime.gc();
-				// Calculate the used memory
-				long memory = runtime.totalMemory() - runtime.freeMemory();
-				System.out.println("Memory " + (memory / kb));
+				System.out.println("Goal depth " + depth + ", Nodes expanded " + count);
 				findPath(solution, current);
 				solFound = true;
 				break here;
@@ -134,6 +113,7 @@ public class Search {
 			}
 			current.children = null;
 			current = null;
+			System.out.println("Depth " + depth + ", " + "Nodes: " + count);
 
 		}
 		return solution;
@@ -152,14 +132,14 @@ public class Search {
 		}
 
 		while (ids.isEmpty()) {
-			ids = DLLS(root, 14);
+			ids = DLS(root, maxDepth);
 			maxDepth++;
 
 		}
 		return ids;
 	}
 
-	public List<Node> DLLS(Node root, int maxDepthh) {
+	public List<Node> DLS(Node root, int maxDepthh) {
 		s = new Stack<>();
 		HashMap<Integer, Integer> map = new HashMap<>();
 		int depth = 0;
@@ -168,8 +148,6 @@ public class Search {
 		int maxDepth = maxDepthh;
 		boolean delete = false;
 		int toDelete = 0;
-		boolean space = true;
-		long memory = 0;
 
 		s.push(root);
 		map.put(0, 1);
@@ -178,18 +156,12 @@ public class Search {
 			Node current = s.pop();
 			toDelete = 0;
 			delete = false;
-			// depth = map.get(current);
-			boolean d = false;
 			count = 0;
-			runtime.gc();
-
-			memory = runtime.totalMemory() - runtime.freeMemory();
-			System.out.println(memory/kb);
 
 			if (depth < maxDepth) {
 
 				if (current.isGoal()) {
-					System.out.println(count);
+					System.out.println("Goal depth " + depth + ", Nodes expanded " + totalCount);
 					solFound = true;
 					findPath(solution, current);
 					break here;
@@ -199,22 +171,11 @@ public class Search {
 				Collections.shuffle(current.children);
 
 				for (int i = 0; i < current.children.size(); i++) {
-//					System.out.println(current.children.size());
 
 					Node child = current.children.get(i);
-					// if (!containsStack(s, child) && !contains(traversed, child)) {
 					s.push(child);
 					count++;
 					totalCount++;
-//						System.out.println("depth2 " + depth);
-//						child.printGrid();
-//						try {
-//							Thread.sleep(500);
-//						} catch (InterruptedException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-					// }
 				}
 
 				current.children = new ArrayList<>();
@@ -243,34 +204,17 @@ public class Search {
 					map.put(depth, count);
 				}
 
-//				System.out.println(depth + ", " + map.get(depth));
-
 				current = null;
 
-			
 			} else {
 
-//				System.out.println("depth1 " + depth);
-//				System.out.println("depth1");
-//				current.printGrid();
-//				if(space) {
-//				runtime.gc();
-//				long memory = runtime.totalMemory() - runtime.freeMemory();
-////				System.out.println((memory/kb));
-//				space = false;
-//				}
-
 				if (current.isGoal()) {
-					System.out.println("Goal is found");
-					System.out.println("Depth");
+					System.out.println("Goal depth " + depth + ", Nodes expanded " + totalCount);
 					solFound = true;
 					findPath(solution, current);
 					break here;
-
 				}
-
 				map.put(depth, map.get(depth) - 1);
-//				System.out.println(map.get(depth));
 
 				while (map.get(depth) == 0) {
 					depth = depth - 1;
@@ -291,86 +235,13 @@ public class Search {
 			}
 
 		}
-
 		root = null;
 		map = null;
 		s = null;
 		System.gc();
-//		System.out.println("Depth " + maxDepth + ", Nodes: " + totalCount);
-		System.out.println(totalCount);
-//		runtime.gc();
-//		memory = runtime.totalMemory() - runtime.freeMemory();
-//		System.out.println((memory/kb));
+		System.out.println("Depth " + maxDepth + ", Nodes: " + totalCount);
 		return solution;
 	}
-
-//	public List<Node> DLS(Node root, int maxDepthh) {
-//		Stack<Node> s = new Stack<>();
-//		HashMap<Node, Integer> map = new HashMap<>();
-//		int depth = 0;
-//		int count = 0;
-//		int maxDepth = maxDepthh;
-//
-//		s.push(root);
-//		map.put(root, depth);
-//
-//		here: while (!s.empty() && solFound != true) {
-//			Node current = s.pop();
-//			depth = map.get(current);
-//			System.out.println(depth);
-//			count++;
-//			System.out.println("Count = " + count);
-////			current.printGrid();
-//
-//			if (depth < maxDepth) {
-//				depth = depth + 1;
-//
-//				traversed.add(current);
-//				map.remove(current);
-//
-//				if (current.isGoal()) {
-//					System.out.println("Goal is found");
-//					System.out.println("Depth");
-//					solFound = true;
-//					findPath(solution, current);
-//					break here;
-//				}
-//
-//				current.ExpandNode();
-//
-//				for (int i = 0; i < current.children.size(); i++) {
-//
-//					Node child = current.children.get(i);
-////					if (!containsStack(s, child) && !contains(traversed, child)) {
-//					s.push(child);
-////						System.out.println("depth2 " + depth);
-////						child.printGrid();
-//					map.put(child, depth);
-////					}
-//				}
-//			} else if (depth > maxDepth) {
-//				System.out.println("Problem");
-//				System.exit(0);
-//			} else {
-//				traversed.add(current);
-//				System.out.println("depth1 " + depth);
-////				System.out.println("depth1");
-////				current.printGrid();
-//				map.remove(current);
-//
-//				if (current.isGoal()) {
-//					System.out.println("Goal is found");
-//					System.out.println("Depth");
-//					solFound = true;
-//					findPath(solution, current);
-//					break here;
-//
-//				}
-//			}
-//
-//		}
-//		return solution;
-//	}
 
 	public List<Node> AS(Node root) {
 		Comparator<Node> comparator = new MyComparator();
@@ -390,14 +261,11 @@ public class Search {
 			Node current = pq.poll();
 			depth = map.get(current);
 
-
 			traversed.add(current);
 			dbool = true;
 
-
 			if (current.isGoal()) {
-				System.out.println("Goal is found");
-				System.out.println("Depth " + depth);
+				System.out.println("Goal depth " + depth + ", Nodes expanded " + count);
 				solFound = true;
 				findPath(solution, current);
 				break;
@@ -413,96 +281,89 @@ public class Search {
 				}
 
 				Node child = current.children.get(i);
-	
+
 				nodeCount.put(child, depth);
-//				System.out.println(depth);
-//				child.printGrid();
-//				try {
-//					Thread.sleep(500);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
 
 				if (!containsQueue(pq, child) && !contains(traversed, child)) {
-
 
 					child.setDepth(depth);
 					child.calcPriority();
 					map.put(child, depth);
 					pq.add(child);
-//					System.out.println(depth);
-//					child.printGrid();
-//					try {
-//						Thread.sleep(10);
-//					} catch (InterruptedException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-
 				}
-
 			}
-			
+
 //			System.out.println("Depth " + depth + ", " + "Nodes: " + count);
 			current.children = null;
 			current = null;
 
-
 		}
-		int[] z = new int[14];
+		int[] z = new int[17];
 		for (Entry<Node, Integer> entry : nodeCount.entrySet()) {
-//			System.out.println(entry.getValue());
-//			entry.getKey().printGrid();
-			switch(entry.getValue()) {
+			switch (entry.getValue()) {
 			case 1:
-				z[0] = z[0]+1;
+				z[0] = z[0] + 1;
 				break;
 			case 2:
-				z[1] = z[1]+1;
+				z[1] = z[1] + 1;
 				break;
 			case 3:
-				z[2] = z[2]+1;
+				z[2] = z[2] + 1;
 				break;
 			case 4:
-				z[3] = z[3]+1;
+				z[3] = z[3] + 1;
 				break;
 			case 5:
-				z[4] = z[4]+1;
+				z[4] = z[4] + 1;
 				break;
 			case 6:
-				z[5] = z[5]+1;
+				z[5] = z[5] + 1;
 				break;
 			case 7:
-				z[6] = z[6]+1;
+				z[6] = z[6] + 1;
 				break;
 			case 8:
-				z[7] = z[7]+1;
+				z[7] = z[7] + 1;
 				break;
 			case 9:
-				z[8] = z[8]+1;
+				z[8] = z[8] + 1;
 				break;
 			case 10:
-				z[9] = z[9]+1;
+				z[9] = z[9] + 1;
 				break;
 			case 11:
-				z[10] = z[10]+1;
+				z[10] = z[10] + 1;
 				break;
 			case 12:
-				z[11] = z[11]+1;
+				z[11] = z[11] + 1;
 				break;
 			case 13:
-				z[12] = z[12]+1;
+				z[12] = z[12] + 1;
 				break;
 			case 14:
-				z[13] = z[13]+1;	
+				z[13] = z[13] + 1;
 				break;
+
+			case 15:
+				z[14] = z[14] + 1;
+				break;
+
+			case 16:
+				z[15] = z[15] + 1;
+				break;
+			case 17:
+				z[16] = z[16] + 1;
+				break;
+
+
 			}
 		}
-		for(int x :z) {
-			System.out.println(x);
+		int i = 0;
+		for (int x : z) {
+			i++;
+			System.out.println("Depth " + i + ", Nodes: " + x);
 		}
-		System.out.println(count);
+//		System.out.println("Total nodes " + count);
 		return solution;
 	}
 
@@ -522,11 +383,11 @@ public class Search {
 
 		@Override
 		public int compare(Node o1, Node o2) {
-			o1Pri = o1.getPriority();
-			o2Pri = o2.getPriority();
-			if (o1Pri > o2Pri) {
+			priority1 = o1.getPriority();
+			priority2 = o2.getPriority();
+			if (priority1 > priority2) {
 				return 1;
-			} else if (o1Pri < o2Pri) {
+			} else if (priority1 < priority2) {
 				return -1;
 			} else {
 				return 0;
@@ -543,30 +404,10 @@ public class Search {
 		}
 	}
 
-	public boolean containsStack(Stack<Node> list, Node a) {
-		boolean contains = false;
-		Iterator<Node> itr = list.iterator();
-		while (itr.hasNext()) {
-			if (itr.next().puzzleEquality(a.grid)) {
-				// System.out.println("contains1");
-				contains = true;
-			}
-		}
-		return contains;
-	}
-
 	public boolean contains(List<Node> list, Node a) {
 		boolean contains = false;
-		// System.out.println("contains");
-		// System.out.println("toexpand size " + list.size());
-//		if (list.contains(a)) {
-//			// System.out.println("contains1");
-//			contains = true;
-//		}
-
 		for (Node n : list) {
 			if (n.puzzleEquality(a.grid)) {
-				// System.out.println("contains1");
 				contains = true;
 			}
 		}

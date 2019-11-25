@@ -17,13 +17,6 @@ public class Node {
 
 	public Node(char[][] begin) {
 		copyNode(begin, grid);
-//		printGrid();
-//		try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 	}
 
 	public void ExpandNode() {
@@ -56,13 +49,9 @@ public class Node {
 			ch[agentRow][agentCol] = temp;
 
 			Node child = new Node(ch);
-//			child.agentRow = agentRow;
-//			child.agentCol = agentCol + 1;
 			children.add(child);
 			child.parent = this;
-//			System.out.println("Right");
 		}
-
 	}
 
 	public void moveLeft(char[][] some, int agentRow, int agentCol) {
@@ -75,11 +64,8 @@ public class Node {
 			ch[agentRow][agentCol] = temp;
 
 			Node child = new Node(ch);
-//			child.agentRow = agentRow;
-//			child.agentCol = agentCol - 1;
 			children.add(child);
 			child.parent = this;
-//			System.out.println("left");
 		}
 	}
 
@@ -93,11 +79,8 @@ public class Node {
 			ch[agentRow][agentCol] = temp;
 
 			Node child = new Node(ch);
-//			child.agentRow = agentRow - 1;
-//			child.agentCol = agentCol;
 			children.add(child);
 			child.parent = this;
-//			System.out.println("up");
 		}
 	}
 
@@ -111,11 +94,8 @@ public class Node {
 			ch[agentRow][agentCol] = temp;
 
 			Node child = new Node(ch);
-//			child.agentRow = agentRow + 1;
-//			child.agentCol = agentCol;
 			children.add(child);
 			child.parent = this;
-//			System.out.println("Down");
 		}
 	}
 	
@@ -130,19 +110,17 @@ public class Node {
 					rowDiff = Math.abs(i - 1);
 					colDiff = Math.abs(j - 1);
 					val = val + rowDiff + colDiff;
-//					System.out.println("a " + val);
 				}
 				if(this.grid[i][j] == 'b') {
 					rowDiff = Math.abs(i - 2);
 					colDiff = Math.abs(j - 1);
 					val = val + rowDiff + colDiff;
-//					System.out.println("b " + val);
 				}
 				if(this.grid[i][j] == 'c') {
 					rowDiff = Math.abs(i - 3);
 					colDiff = Math.abs(j - 1);
 					val = val + rowDiff + colDiff;
-//					System.out.println("c " + val);
+
 				}
 				
 			}
@@ -187,7 +165,8 @@ public class Node {
 
 	public boolean isGoal() {
 		boolean finish = false;
-		if (this.grid[1][1] == 'a' && this.grid[2][1] == 'b' && this.grid[3][1] == 'c') {
+		if (this.grid[1][1] == 'a' && this.grid[2][1] == 'b' 
+				&& this.grid[3][1] == 'c') {
 			finish = true;
 		}
 		return finish;
