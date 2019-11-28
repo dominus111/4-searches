@@ -126,7 +126,7 @@ public class Node {
 			}
 
 		}
-		manhattan = val + depth;
+		manhattan = 30*val + (depth*11);
 	}
 	public int getPriority() {
 		return manhattan;
@@ -173,7 +173,6 @@ public class Node {
 	}
 
 	public void setDepth(int depth) {
-		this.depth = depth;
-		
+		this.depth = depth;	
 	}
 }

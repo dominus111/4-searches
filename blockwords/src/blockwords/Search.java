@@ -265,7 +265,8 @@ public class Search {
 			dbool = true;
 
 			if (current.isGoal()) {
-				System.out.println("Goal depth " + depth + ", Nodes expanded " + count);
+				System.out.println("Goal depth " + depth +
+						", Nodes expanded " + count);
 				solFound = true;
 				findPath(solution, current);
 				break;
@@ -284,13 +285,11 @@ public class Search {
 
 				nodeCount.put(child, depth);
 
-				if (!containsQueue(pq, child) && !contains(traversed, child)) {
+				child.setDepth(depth);
+				child.calcPriority();
+				map.put(child, depth);
+				pq.add(child);
 
-					child.setDepth(depth);
-					child.calcPriority();
-					map.put(child, depth);
-					pq.add(child);
-				}
 			}
 
 //			System.out.println("Depth " + depth + ", " + "Nodes: " + count);
@@ -354,7 +353,6 @@ public class Search {
 			case 17:
 				z[16] = z[16] + 1;
 				break;
-
 
 			}
 		}

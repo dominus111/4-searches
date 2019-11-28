@@ -15,7 +15,7 @@ public class Main {
 		Node root = new Node(startState);
 			
 		Search search = new Search();
-		List<Node> sol = search.BFS(root);	
+		List<Node> sol = search.AS(root);	
 		
 		if(sol.size() > 0) {
 			Collections.reverse(sol);
