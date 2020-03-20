@@ -2,7 +2,7 @@
 # 4 Searches
 This project looks a tile puzzle, where we have to reach a final state of the board.\
 The agent (smile face) is the empty tile and we can only slide blocks into its place.\
-![](puzzle.PNG)
+![](puzzle.PNG)\
 I have used 4 different search algorithms, to show their time complexity for solving the puzzle.\
 The project further looks at the space complexity of the searches and see how the complexity worsens when we make some of the tiles not being able to move.\
 For more detailed information please look at the PDF.
